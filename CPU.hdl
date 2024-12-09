@@ -32,7 +32,21 @@ CHIP CPU {
         pc[15];          // address of next instruction
 
     PARTS:
-	/** Instruction decoding:
+	CHIP CPU {
+
+    IN  inM[16],         // M value input  (M = contents of RAM[A])
+        instruction[16], // Instruction for execution
+        reset;           // Signals whether to re-start the current
+                         // program (reset==1) or continue executing
+                         // the current program (reset==0).
+
+    OUT outM[16],        // M value output
+        writeM,          // Write to M? 
+        addressM[15],    // Address in data memory (of M)
+        pc[15];          // address of next instruction
+
+    PARTS:
+   /** Instruction decoding:
     * There are three d-bits in the instruction, {A, D, M}, which determines which register is to accept the ALU output. **/
     DMux(in=true, sel=instruction[15], a=atype, b=ctype);
     Or(a=atype, b=instruction[5], out=ainstruct);
@@ -71,4 +85,6 @@ CHIP CPU {
     Not(in=dojump, out=nojump);			// or increment
     PC(in=aregout, load=dojump, inc=nojump, reset=reset, out[0..14]=pc);
 
+
+}
 }
